@@ -1,2 +1,2 @@
-#video-speed
-用于调节html5在线视频的播放速率，也可用于快速跳过某些html5片头广告
+#video-speed-chrome-extension
+一款chrome的扩展程序，用于调节html5在线视频的播放速率，也可用于快速跳过某些html5片头广告
