@@ -1,0 +1,23 @@
+{ 
+"manifest_version": 2, 
+"name": "变速播放", 
+"version": "1.0", 
+"description": "调整HTML5在线视频的播放速率", 
+"browser_action": { 
+"default_icon": "ico.png",
+"default_popup":"popup.html"
+}, 
+"icons":{"128":"ico128.png","48":"ico48.png","16":"ico16.png"},
+"permissions": [ 
+"*://*/",
+"tabs"
+],
+"background":{
+	"scripts":["background.js"]
+},
+"content_scripts":[{
+	"matches": ["*://*/*"],
+	"js":["content_script.js"],
+	"css":["reset.css"]
+	}]
+}
