@@ -1,2 +1,1 @@
-#video-speed-chrome-extension
-一款chrome的扩展程序，用于调节html5在线视频的播放速率，也可用于快速跳过某些html5片头广告
+# 一款用于调节在线HTML5视频播放速率的chrome扩展程序
