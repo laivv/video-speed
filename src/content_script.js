@@ -14,7 +14,7 @@ let speed = 1.0;
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
   speed = request.speed;
   if (request.cmd === REQUEST.SET) {
-    setSpeedOperate(speed);
+    setSpeed(speed);
   }
 });
 
@@ -24,41 +24,38 @@ function postCommand(cmd, cb) {
   });
 }
 
-function setSpeedOperate(speed) {
-  setSpeed(speed, (cmd) => {
-    postCommand(cmd)
-  })
-}
-
 function setSpeed(speed, cb) {
   if (videoElems.length) {
+    postCommand(RESPONSE.YES)
     for (const video of videoElems) {
       video.playbackRate = speed;
     }
     isWork(speed, e => {
-      cb && cb(e)
+      if (!e) {
+        postCommand(RESPONSE.ERROR);
+      }
     })
   } else {
-    cb && cb(RESPONSE.NO)
+    postCommand(RESPONSE.NO)
   }
 }
 
 function isWork(speed, cb) {
-  // setTimeout(() => {
-  let cmd = RESPONSE.YES;
-  for (const video of videoElems) {
-    if (video.playbackRate !== speed) {
-      cmd = RESPONSE.ERROR
-      break;
+  setTimeout(() => {
+    let cmd = RESPONSE.YES;
+    for (const video of videoElems) {
+      if (video.playbackRate !== speed) {
+        cmd = RESPONSE.ERROR
+        break;
+      }
     }
-  }
-  cb && cb(cmd)
-  // }, 0);
+    cb && cb(cmd)
+  }, 10);
 }
 
 function setSpeedOperateProxy() {
   videoElems = Array.from(document.querySelectorAll('video'))
-  setSpeedOperate(speed)
+  setSpeed(speed)
 }
 
 
@@ -80,12 +77,9 @@ function watch() {
 }
 
 function initialize() {
-  document.addEventListener('DOMContentLoaded', e => {
-    postCommand(RESPONSE.GET_SPEED, request => {
-      speed = request;
-      //setSpeedOperateProxy()
-      watch();
-    })
+  postCommand(RESPONSE.GET_SPEED, request => {
+    speed = request;
+    watch();
   });
 }
 
