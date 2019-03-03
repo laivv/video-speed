@@ -31,7 +31,7 @@
 </template>
 <script>
 const REQUEST = {
-  SET: 0
+  SET: 0,
 };
 const background = chrome.extension.getBackgroundPage();
 export default {
@@ -104,6 +104,7 @@ export default {
       this.mX = e.pageX;
     },
     init() {
+      this.setSpeed();
       let timer = null;
       document.addEventListener("mousemove", e => {
         if (this.isPress) {

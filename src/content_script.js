@@ -12,8 +12,8 @@ let videoElems = [];
 let speed = 1.0;
 
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
-  speed = request.speed;
   if (request.cmd === REQUEST.SET) {
+    speed = request.speed;
     setSpeed(speed);
   }
 });
