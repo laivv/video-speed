@@ -1,11 +1,19 @@
 module.exports = {
+  "parser": "babel-eslint",
   root: true,
   parserOptions: {
-      sourceType: 'module'
+      sourceType: 'module',
+      // ecmaFeatures: {
+      //   "jsx": true
+      // }
   },
   env: {
       browser: true,
   },
+  extends: "standard",
+  plugins: [
+    'html'
+  ],
   rules: {
       "indent": [1, 2],
       "quotes": [1, "single"],

@@ -16,24 +16,28 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
+
     // alias: {
     //   'vue$': 'vue/dist/vue.esm.js'
     //   // 'vue$': 'vue/dist/vue.js'
     //   // 'vue$': 'vue/dist/vue.common.js'
     // }
   },
-  mode:'production',
+  // externals: {
+  //   chrome: 'chrome'
+  // },
+  mode: 'production',
   module: {
     rules: [
       {
         test: /\.js$/,
-        loader: ['babel-loader'],
-        // loader: ['babel-loader','eslint-loader'],
-        exclude: /node_modules/,
+        loader: 'babel-loader'
       },
+      // { test: /\.(vue|js|jsx)$/, loader: 'eslint-loader', exclude: /node_module/, enforce: 'pre' },
+
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: ['vue-loader']
       },
       {
         test: /\.css$/,
@@ -44,7 +48,7 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new CopyWebpackPlugin([
-      { from: path.join(basePath,'./src/assets/'), to:  path.join(basePath,'./dist') }
+      { from: path.join(basePath, './src/assets/'), to: path.join(basePath, './dist') }
     ]),
     new htmlWebpackPlugin({
       chunks: ['popup'],

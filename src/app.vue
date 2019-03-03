@@ -4,7 +4,7 @@
       <legend class="title">调节播放速率</legend>
       <div class="clearfix">
         <button class="btn btn-d fl" @click="minus">-</button>
-        <span class="val fl">{{speed}}x</span>
+        <span class="val fl">{{speed | fixed}}x</span>
         <button class="btn btn-u fl" @click="plus">+</button>
         <button class="btn btn-reset fr" @click="reset">1x</button>
       </div>
@@ -12,7 +12,7 @@
         <div class="progress" @click="progressClick($event)">
           <div
             class="spinner"
-            :style="{left:`${speed / maxSpeed}%`}"
+            :style="{left:`${speed / maxSpeed * 158}px`}"
             @mousedown="spinnerDown($event)"
           ></div>
         </div>
@@ -33,7 +33,7 @@
 const REQUEST = {
   SET: 0
 };
-
+const background = chrome.extension.getBackgroundPage();
 export default {
   data() {
     return {
@@ -44,15 +44,15 @@ export default {
       isDrag: false,
       isPress: false,
       maxSpeed: 50.0,
-      speed: chrome.extension.getBackgroundPage().speed || 1.0
+      speed: background.speed || 1
     };
   },
   mounted() {
     this.init();
   },
-  filters:{
-    fixed(n){
-      return n.toFixed(1)
+  filters: {
+    fixed(n) {
+      return n.toFixed(1);
     }
   },
   computed: {
@@ -69,14 +69,16 @@ export default {
     minus() {
       this.speed -= 0.1;
       this.speed = this.speed < 0.1 ? 0.1 : this.speed;
+      this.setSpeed();
     },
     plus() {
       this.speed += 0.1;
-      this.speed =
-        this.speed > this.maxSpeed ? this.maxSpeed : this.speed;
+      this.speed = this.speed > this.maxSpeed ? this.maxSpeed : this.speed;
+      this.setSpeed();
     },
     reset() {
-      this.speed = 1.0;
+      this.speed = 1;
+      this.setSpeed();
     },
     progressClick(e) {
       if (this.isDrag) {
@@ -87,18 +89,18 @@ export default {
       this.speed <= 0.1 ? 0.1 : this.speed;
       this.setSpeed();
     },
-    runCommand(cmd) {
-      chrome.tabs.query({ active: true }, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { cmd });
+    postCommand(cmd) {
+      chrome.tabs.query({ active: true }, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, cmd);
       });
     },
     setSpeed() {
-      chrome.extension.getBackgroundPage().speed = this.speed;
-      this.runCommand(REQUEST.SET);
+      background.speed = this.speed;
+      this.postCommand({ cmd: REQUEST.SET, speed: this.speed });
     },
     spinnerDown(e) {
       this.isPress = true;
-      this.X = parseFloat(e.target.style.left);
+      this.X = parseFloat(e.target.style.left) + 12;
       this.mX = e.pageX;
     },
     init() {
@@ -135,6 +137,6 @@ export default {
 };
 </script>
 <style lang="css">
-  @import './app.css';
+@import "./app.css";
 </style>
 
